@@ -1,0 +1,12 @@
+package com.todo.repos;
+
+import org.springframework.data.mongodb.repository.MongoRepository;
+
+import com.todo.tasks.task;
+
+public interface TaskRepository extends MongoRepository<task, String> {
+    
+  
+    
+
+}

@@ -1,0 +1,34 @@
+package com.todo.demo;
+
+import java.util.List;
+
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.Query;
+import org.springframework.data.querydsl.ListQuerydslPredicateExecutor;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+
+import com.todo.tasks.task;
+
+public interface taskrepo extends MongoRepository<task,String> {
+   
+	@Query("{'taskname': ?0}")
+	List<task> findByTaskname(String taskname);
+	
+ 	//@Query("{$and :[{taskname: ?0},{deadline: ?1}]}")
+	List<task> findTaskByTasknameAndDeadline(String taskname,String deadline);
+	
+     void existsByTask(task t);
+
+	//task deleteByDeadline(String deadline);
+	  
+	  //exists-method to check wether the content exists in db or not
+	
+	//task insertTask(task t);
+  
+	
+	
+	
+
+
+	
+}

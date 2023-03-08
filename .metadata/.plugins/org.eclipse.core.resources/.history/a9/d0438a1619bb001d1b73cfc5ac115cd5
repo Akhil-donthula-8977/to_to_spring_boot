@@ -1,0 +1,4 @@
+
+public interface taskRepository implements MongoRepository{
+
+}
