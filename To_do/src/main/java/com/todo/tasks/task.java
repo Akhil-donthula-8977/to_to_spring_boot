@@ -5,9 +5,17 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection="tasks")
 public class task {
-        
+   
+		@Id 
+	    private String id;
 	    private String taskname;
         private String deadline;
+        public String getId() {
+    		return id;
+    	}
+    	public void setId(String id) {
+    		this.id = id;
+    	}
 		
 		public String getTaskname() {
 			return taskname;

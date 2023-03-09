@@ -24,10 +24,13 @@ public interface taskrepo extends MongoRepository<task,String> {
 
 	//List<task> getTaskByDeadline(String deadline);
 	
-	
+	void deleteById(String id);
 
 	
 	List<task> deleteTaskByDeadline(List<task> t);
+
+	
+
 	
 	
 

@@ -24,4 +24,5 @@
     <fullyQualifiedTypeName name="org.springframework.data.mongodb.repository.DeleteQuery"/>
     <fullyQualifiedTypeName name="org.springframework.data.mongodb.repository.Query"/>
     <fullyQualifiedTypeName name="org.springframework.data.mongodb.core.query.Criteria"/>
+    <fullyQualifiedTypeName name="org.springframework.web.bind.annotation.RequestBody"/>
 </qualifiedTypeNameHistroy>

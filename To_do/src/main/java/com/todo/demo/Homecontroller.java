@@ -83,11 +83,29 @@ public class Homecontroller  {
 	
 	//delete operation
 	
-	@DeleteMapping("/task/{deadline}")
-	public List<task> deletetask(@PathVariable("deadline")String deadline) {
+	@DeleteMapping("/taskid/{id}")
+	public void deletetask(@PathVariable("id")String id)throws IllegalArgumentException {
          	
-		List<task> x= task_rep.deleteTaskByDeadline(task_rep.findTaskByDeadline(deadline)); 
-		 return x;
+		 task_rep.deleteById(id); 
+		 
+		 ///return x;
+		//we can add conditions and error exceptions to send http status response
+		 //void deleteAllByDeadline(Iterable<? extends ID> ids);
+		//return 
+           
+           
+	}
+	
+
+	
+	@DeleteMapping("/task/{taskname}")
+	public void deletetaskbyname(@PathVariable String taskname)throws IllegalArgumentException {
+        List<task> x=task_rep.findByTaskname(taskname);
+        for(task t:x) {
+        	String id__=t.getId();
+		 task_rep.deleteById(id__); 
+        }
+		 ///return x;
 		//we can add conditions and error exceptions to send http status response
 		 //void deleteAllByDeadline(Iterable<? extends ID> ids);
 		//return 
@@ -96,16 +114,35 @@ public class Homecontroller  {
 	}
 	
 	
+	@DeleteMapping("/task/{deadline}")
+	public void deletetaskbydeadline(@PathVariable String deadline)throws IllegalArgumentException {
+        List<task> x=task_rep.findByTaskname(deadline);
+        for(task t:x) {
+        	String id__=t.getId();
+		 task_rep.deleteById(id__); 
+        }
+		 ///return x;
+		//we can add conditions and error exceptions to send http status response
+		 //void deleteAllByDeadline(Iterable<? extends ID> ids);
+		//return 
+           
+           
+	}
+	
 	
 	//update:operation
 	@PutMapping(path="/task",consumes={"application/json"})
-	public void updatetask(@RequestBody String taskname,task t){
-          List<task> x=task_rep.findByTaskname(taskname);
-          for (task element : x) {
-        	  element.setTaskname(t.getTaskname());
-        	  element.setDeadline(t.getDeadline());
-        	  task_rep.save(element);
-          }
+	public void updatetask(@RequestBody String taskname,String deadline){
+		List<task> t=task_rep.findByTaskname(taskname);
+		for(task a:t) {
+		a.setDeadline(deadline);
+		final task x=a;
+		task_rep.save(a);
+		    
+			
+		}
+    
+         
    
 	//return "home.jsp";
 		
