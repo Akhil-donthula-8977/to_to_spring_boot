@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,6 +34,8 @@ import jakarta.servlet.http.HttpServletResponse;
 public class Homecontroller  {
    @Autowired
    taskrepo task_rep;
+  
+  
    
    @RequestMapping("/")
    public ModelAndView home() {
@@ -43,7 +47,6 @@ public class Homecontroller  {
    
    
    //fetching operation
- 
    @GetMapping(path="/tasks",produces= {"application/json"})//only produces data in json format
    @ResponseBody
     public List<task> alltask() {
@@ -53,46 +56,63 @@ public class Homecontroller  {
    
    
     
-   @GetMapping("/tasks/{taskname}")//path variable represents the { } part
+   @GetMapping("/tasks/{taskname}")//path variable represents the {{} } part
    @ResponseBody
    public List<task> gettask(@PathVariable("taskname") String taskname) {
    //return task_rep.findByTaskname(taskname).toString();
-	     
-	return task_rep.findByTaskname(taskname);
+ return task_rep.findByTaskname(taskname);
   }
    
    
+   
+   
+   /*we can send a response for a request in two ways that is through
+     @REsponse Body which sends ony body forn a response adn 
+     one more is response entity in wihc we can set statuscode headers for the
+     response*/
+    
    @GetMapping(path="/task" ,produces= {"application/json"})
-   @ResponseBody
-   public List<task> gettask( task t) {
-   //return task_rep.findByTaskname(taskname).toString();
-   return task_rep.findTaskByTasknameAndDeadline(t.getTaskname(),t.getDeadline());
+   //@ResponseBody
+   public ResponseEntity<List<task>> gettask(task t) {
+   
+	List<task> x=  task_rep.findTaskByTasknameAndDeadline(t.getTaskname(),t.getDeadline());
+     if(!x.isEmpty()) {
+       return new ResponseEntity<>(x,HttpStatus.OK);
+     }
+     else{
+	   return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
+	 }
    }
    
   
     
    //create:operation
 	@PostMapping(path="/task",consumes={"application/json"})
-	public task add_task(@RequestBody task t){
+	public ResponseEntity<String> add_task(@RequestBody task t){
+	try {
 	 task_rep.save(t);
-	 return t;
-	//return "home.jsp";
-		
+	 return  new ResponseEntity<>("added",HttpStatus.OK);
 	}
+	catch(Error e){
+		return  new ResponseEntity<>("unable to ad",HttpStatus.BAD_REQUEST);
+	  }
+   }
 	
 	
 	//delete operation
-	
-	@DeleteMapping("/taskid/{id}")
-	public void deletetask(@PathVariable("id")String id)throws IllegalArgumentException {
-         	
-		 task_rep.deleteById(id); 
-		 
-		 ///return x;
-		//we can add conditions and error exceptions to send http status response
+	//we can add conditions and error exceptions to send http status response
 		 //void deleteAllByDeadline(Iterable<? extends ID> ids);
-		//return 
-           
+	@DeleteMapping("/taskid/{id}")
+	public ResponseEntity<String> deletetask(@PathVariable("id")String id)throws IllegalArgumentException {
+       Optional<task> x=task_rep.findById(id);
+      if(x.isPresent()) {
+    	  task_rep.deleteById(id);
+    	  return  new ResponseEntity<>("deleted",HttpStatus.OK);
+      }
+      else {
+    	return  new ResponseEntity<>("Not  Found",HttpStatus.BAD_REQUEST);
+      
+      }       
            
 	}
 	
@@ -143,10 +163,7 @@ public class Homecontroller  {
 		}
     
          
-   
-	//return "home.jsp";
-		
-	}
+}
 	
 	
 	
